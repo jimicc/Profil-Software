@@ -1,4 +1,4 @@
-import csv, requests, argparse, threading 
+import csv, requests, argparse, threading
 path = "movies.csv"
 file = open(path, newline='')
 fields = ['id','title','year','runtime','genre','director','cast','writer','language','country','awards','imdb_rating','imdb_votes','box_office']
@@ -22,11 +22,11 @@ class Movie:
         self.imdb_rating = imdb_rating
         self.imdb_votes = imdb_votes
         self.box_office = box_office
-    
+
 class Movies:
     def __init__(self, database):
         self.database = database
-        
+
     def get_numeric(self, numeric_string):
         result = ''
         for i in range(len(numeric_string)):
@@ -51,7 +51,7 @@ class Movies:
                 d2 = {fields[i]: response.get(keys[i]) for i in range(1,14,1)}
                 d1.update(d2)
                 writer.writerow(d1)
-                counter += 1 
+                counter += 1
 
     def get_wins_and_nominations(self, index_number):
         list_of_numbers = ''
@@ -59,55 +59,55 @@ class Movies:
         all_nominations = 0
         win_oscar = 0
         list_of_numbers = [s for s in movies.database[index_number]['awards'].split() if s]
-        if list_of_numbers[0] == 'Nominated' and (list_of_numbers[3] == 'Oscar.' or list_of_numbers[3] == 'Oscars.' or list_of_numbers[3] == 'Golden' or list_of_numbers[3] == 'BAFTA'): 
+        if list_of_numbers[0] == 'Nominated' and (list_of_numbers[3] == 'Oscar.' or list_of_numbers[3] == 'Oscars.' or list_of_numbers[3] == 'Golden' or list_of_numbers[3] == 'BAFTA'):
             all_nominations += int(list_of_numbers[2])
-        
+
         if list_of_numbers[0] == 'Won':
-            if (list_of_numbers[2] == 'Oscar.' or list_of_numbers[2] == 'Oscars.'): 
+            if (list_of_numbers[2] == 'Oscar.' or list_of_numbers[2] == 'Oscars.'):
                 win_oscar += int(list_of_numbers[1])
-            elif (list_of_numbers[2] == 'BAFTA.'): 
+            elif (list_of_numbers[2] == 'BAFTA.'):
                 all_wins += int(list_of_numbers[1])
-            elif (list_of_numbers[2] == 'Golden.'): 
+            elif (list_of_numbers[2] == 'Golden.'):
                 all_wins += int(list_of_numbers[1])
 
         if (len(list_of_numbers) > 1):
-            if (list_of_numbers[1] == 'wins.'): 
+            if (list_of_numbers[1] == 'wins.'):
                 all_wins += int(list_of_numbers[0])
-            if (list_of_numbers[1] == 'nominations.'): 
+            if (list_of_numbers[1] == 'nominations.'):
                 all_nominations += int(list_of_numbers[0])
-            if 'wins' in list_of_numbers: 
+            if 'wins' in list_of_numbers:
                 wins = list_of_numbers.index('wins')
                 wins = int(list_of_numbers[wins-1])
                 all_wins += wins + win_oscar
-            if 'nominations.' in list_of_numbers: 
+            if 'nominations.' in list_of_numbers:
                 nominations = list_of_numbers.index('nominations.')
                 nominations = int(list_of_numbers[nominations-1])
                 all_nominations += nominations
         results = {'oscars': win_oscar, 'wins': all_wins, 'nominations': all_nominations, 'index': index_number}
         return results
 
-    def comparison(self, table_name, first_movie, second_movie): 
+    def comparison(self, table_name, first_movie, second_movie):
         found_movies = []
 
         for i in range(len(movies.database)):
             if (movies.database[i]['title'].lower() == first_movie.lower()):
                 found_movies += '1'
-                movie_one = Movie(title = movies.database[i]['title'], 
-                                runtime = movies.database[i]['runtime'], 
-                                awards = movies.database[i]['awards'], 
-                                imdb_rating = movies.database[i]['imdb_rating'], 
-                                box_office = movies.database[i]['box_office'], 
+                movie_one = Movie(title = movies.database[i]['title'],
+                                runtime = movies.database[i]['runtime'],
+                                awards = movies.database[i]['awards'],
+                                imdb_rating = movies.database[i]['imdb_rating'],
+                                box_office = movies.database[i]['box_office'],
                                 id = movies.database[i]['id'])
-                
+
             if (movies.database[i]['title'].lower() == second_movie.lower()):
                 found_movies += '2'
-                movie_two = Movie(title = movies.database[i]['title'], 
-                                runtime = movies.database[i]['runtime'], 
-                                awards = movies.database[i]['awards'], 
-                                imdb_rating = movies.database[i]['imdb_rating'], 
-                                box_office = movies.database[i]['box_office'], 
+                movie_two = Movie(title = movies.database[i]['title'],
+                                runtime = movies.database[i]['runtime'],
+                                awards = movies.database[i]['awards'],
+                                imdb_rating = movies.database[i]['imdb_rating'],
+                                box_office = movies.database[i]['box_office'],
                                 id = movies.database[i]['id'])
-                
+
         if '1' not in found_movies:
             print(f"'{first_movie}' not found in database")
         if '2' not in found_movies:
@@ -123,7 +123,7 @@ class Movies:
                             print(f'{table_name} of this movies is unknown')
                     else:
                         print(f"'{table_name}' of this movies is equal {movie_two.runtime} for '{movie_one.title}' and '{movie_two.title}'")
-            
+
             elif table_name == 'box_office':
                 if movies.get_numeric(movie_one.box_office) > movies.get_numeric(movie_two.box_office):
                     print(f"Title: {movie_one.title}\t{table_name}: {movie_one.box_office}")
@@ -134,7 +134,7 @@ class Movies:
                             print(f'{table_name} of this movies is unknown')
                     else:
                         print(f"'{table_name}' of this movies is equal {movie_two.box_office} for '{movie_one.title}' and '{movie_two.title}'")
-            
+
             elif table_name == 'imdb_rating':
                 if movies.get_numeric(movie_one.imdb_rating) > movies.get_numeric(movie_two.imdb_rating):
                     print(f"Title: {movie_one.title}\t{table_name}: {movie_one.imdb_rating}")
@@ -145,7 +145,7 @@ class Movies:
                             print(f'{table_name} of this movies is unknown')
                     else:
                         print(f"'{table_name}' of this movies is equal {movie_two.imdb_rating} for '{movie_one.title}' and '{movie_two.title}'")
-            
+
             elif table_name == 'awards':
                 movie_one_awards = movies.get_wins_and_nominations(movie_one.id)
                 movie_two_awards = movies.get_wins_and_nominations(movie_two.id)
@@ -180,7 +180,7 @@ class Movies:
                 percentage = win_results['wins']/(win_results['wins']+win_results['nominations'])
             percentage = round(percentage, 2)
             if percentage > 0.8:
-                id_list.append(i) 
+                id_list.append(i)
         return id_list
 
     def box_100(self):
@@ -189,7 +189,7 @@ class Movies:
             if len(movies.database[i]['box_office']) > 11:
                 id_list.append(i)
         return id_list
-            
+
     def language(self, language):
         for i in range(len(movies.database)):
             if language in movies.database[i]['language'].lower():
@@ -203,23 +203,23 @@ class Movies:
             for i in range(len(movies.database)):
                 result = movies.get_wins_and_nominations(i)
                 if (result[column_name] == column_value):
-                    column_index.append(i)    
+                    column_index.append(i)
                 elif (result[column_name] > column_value):
                     column_index = []
                     column_index.append(i)
                     column_value = result[column_name]
-            for item in column_index:    
+            for item in column_index:
                 print(f"Title: {movies.database[item]['title']}\t {column_name.capitalize()}: {column_value}")
-                    
+
         elif (column_name == 'runtime') or (column_name == 'imdb_rating') or (column_name == 'box_office'):
             for i in range(len(movies.database)):
                 if (movies.get_numeric(movies.database[i][column_name]) == column_value):
-                    column_index.append(i)    
+                    column_index.append(i)
                 elif (movies.get_numeric(movies.database[i][column_name]) > column_value):
                     column_index = []
                     column_index.append(i)
                     column_value = movies.get_numeric(movies.database[i][column_name])
-            for item in column_index:    
+            for item in column_index:
                 print(f"Title: {movies.database[item]['title']}\t {column_name.capitalize()}: {movies.database[item][column_name]}")
     def awards_won(self, movie_title):
         for i in range(len(movies.database)):
@@ -249,7 +249,7 @@ class Movies:
                 else:
                     writer2.writerow(d1)
                     print(f"'{d1['title']}' added to database")
-    
+
     def only_nominated(self):
         id_list = []
         for i in range(len(movies.database)):
@@ -291,7 +291,7 @@ parser.add_argument("--add", nargs='*', metavar="str", type=str, help='Adding mo
 parser.add_argument("--download_api", nargs='*', type=str, help='Download api from omdb', required=False)
 parser.add_argument("--highscores", nargs='*', type=str, help='Show current highscores in: runtime, box_office, awards, nominations, oscars, imdb_rating', required=False)
 args = parser.parse_args()
-if  args.filter != None: 
+if  args.filter != None:
     if len(args.filter) > 0:
         if args.filter[0].lower() == 'director' or args.filter[0].lower() == 'actor':
             if len(args.filter) > 1:
@@ -304,8 +304,8 @@ if  args.filter != None:
                         print(f"Title: {movies.database[i]['title']}, {args.filter[0].capitalize()}: {movies.database[i]['director']}")
                     elif args.filter[0] == 'actor':
                         print(f"Title: {movies.database[i]['title']}, {args.filter[0].capitalize()}: {movies.database[i]['cast']}")
-    
-                            
+
+
 
 
             else:
@@ -331,14 +331,14 @@ if  args.filter != None:
     Type "python movies.py --help" for more information or read "Readme" file".
                         """)
 elif args.compare != None:
-    if len(args.compare) > 0: 
+    if len(args.compare) > 0:
         if args.compare[0].lower() == 'runtime':
             movies.comparison('runtime',args.compare[1],args.compare[2])
         if args.compare[0].lower() == 'box_office':
             movies.comparison('box_office', args.compare[1], args.compare[2])
         if args.compare[0].lower() == 'imdb_rating':
             movies.comparison('imdb_rating', args.compare[1], args.compare[2])
-        if args.compare[0].lower() == 'awards_won':
+        if args.compare[0].lower() == 'awards':
             first = movies.awards_won(args.compare[1])
             second = movies.awards_won(args.compare[2])
             s = second['index']
@@ -359,7 +359,7 @@ elif args.compare != None:
     Type "python movies.py --help" for more information or read "Readme" file".
                         """)
 elif args.add != None:
-    if len(args.add) > 0:     
+    if len(args.add) > 0:
         movies.add_movie(args.add[0])
     else:
          print("""
@@ -367,10 +367,10 @@ elif args.add != None:
     Example: 'python movies.py --add "Kac Wawa"'
     Type "python movies.py --help" for more information or read "Readme" file".
                         """)
-elif args.sort != None: 
-    if len(args.sort) > 0:   
+elif args.sort != None:
+    if len(args.sort) > 0:
         if len(args.sort) > 1:
-            if args.sort[1].lower() == 'down': 
+            if args.sort[1].lower() == 'down':
                 movies.sort(args.sort[0], True)
             else:
                 movies.sort(args.sort[0], False)
@@ -381,7 +381,7 @@ elif args.sort != None:
     Example: 'python movies.py --sort year down'
     Type "python movies.py --help" for more information or read "Readme" file".
                         """)
-elif args.download_api != None: 
+elif args.download_api != None:
         movies.download()
 elif args.highscores != None:
 
