@@ -1,8 +1,8 @@
 # Backend task by Cezary Czemerda 
 
 Api: http://www.omdbapi.com
-CSV File: https://github.com/jimicc/
-Database: https://github.com/jimicc/
+CSV File: https://github.com/jimicc/Profil-Software/blob/master/movies.csv
+Script file: https://github.com/jimicc/Profil-Software/blob/master/movies.py
 
 Program is able to fill example database with data from OMBd API. 
 Command line interface of program is capable of:
@@ -40,10 +40,15 @@ python movies.py --filter "OPTION"
 Example inputs:
  
 python movies.py --filter director "Frank DaraBONt"
+
 python movies.py --filter actor "morgan freeman"
+
 python movies.py --filter only_nominated
+
 python movies.py --filter won_80
+
 python movies.py --filter box_100
+
 python movies.py --filter language spanish
  
 C) Comparing by: (argument = '--compare')
@@ -59,8 +64,11 @@ python movies.py --compare "COLUMN" "FIRST_MOVIE" "SECOND_MOVIE"
 Example inputs:
  
 python movies.py --compare imdb_rating "The Godfather" "Kac Wawa"
+
 python movies.py --compare box_office "The Godfather" "Kac Wawa"
+
 python movies.py --compare awards_won "The Dark Knight" "Memento"
+
 python movies.py --compare runtime "Memento" "Memento"
  
 D) Adding movies to data source (argument = '--add')
