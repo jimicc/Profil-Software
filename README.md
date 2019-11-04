@@ -16,7 +16,9 @@ python movies.py --sort "COLUMN_NAME" "UP_OR_DOWN(optional)"
 Example inputs:
  
 python movies.py --sort year
+
 python movies.py --sort year down
+
 python movies.py --sort title up
  
 B) Filtering by: (argument = '--filter')
@@ -91,13 +93,8 @@ Example Input:
  
 python movies.py --download_api
 
-
 G) Showing help in terminal : (argument = '--help')
  
 Example Input:
  
 python movies.py --help
-
-"# Profil-Software"  git init git add README.md git commit -m "first commit" git remote add origin https://github.com/jimicc/Profil-Software.git git push -u origin master
-"# Profil-Software" 
-"# Profil-Software" 
